@@ -112,7 +112,7 @@ class TodoAppApplicationTests(
 	}
 
 	@Test
-	fun `存在しないIDでGETすると404を返す`() {
+	fun `存在しないIDでGETするとステータス404を返す`() {
 		// id=999 を指定して GETリクエストを送る。
 		val response = restTemplate.getForEntity("http://localhost:$port/todos/999", TodoEntity::class.java)
 
@@ -121,7 +121,7 @@ class TodoAppApplicationTests(
 	}
 
 	@Test
-	fun `DELETEで削除できる`() {
+	fun `DELETEでIDを指定して削除できる`() {
 		// 項目を新規作成する。
 		val newTodo = TodoEntity(text="hello")
 		val response1 = restTemplate.postForEntity("http://localhost:$port/todos", newTodo, Long::class.java)
@@ -130,7 +130,7 @@ class TodoAppApplicationTests(
 		// localhost/todos/$id に DELETEリクエストを送る。
 		restTemplate.delete("http://localhost:$port/todos/$newId")
 
-		// その項目は存在しない (削除されている)。
+		// 再度GETすると、その項目は存在しない (削除されている)。
 		val response = restTemplate.getForEntity("http://localhost:$port/todos/$newId", TodoEntity::class.java)
 		assertThat(response.statusCode, equalTo(HttpStatus.NOT_FOUND))
 	}
